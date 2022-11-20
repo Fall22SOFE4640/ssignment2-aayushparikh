@@ -1,4 +1,8 @@
 import 'dart:html';
+import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 import 'package:flutter/material.dart';
 
@@ -49,9 +53,9 @@ class MyApp extends StatelessWidget {
     Widget buttonSection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildButtonColumn(color, Icons.call, 'CALL'),
-        _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-        _buildButtonColumn(color, Icons.share, 'SHARE'),
+        _buildButtonColumn(color, Icons.call, 'CALL', callNumber),
+        _buildButtonColumn(color, Icons.near_me, 'ROUTE', mapLauncher),
+        _buildButtonColumn(color, Icons.share, 'SHARE', shareButton),
       ],
     );
 
@@ -93,12 +97,12 @@ class MyApp extends StatelessWidget {
     throw UnimplementedError();
   }
 
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
+  Column _buildButtonColumn(Color color, IconData icon, String label, Function action) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color),
+        IconButton(onPressed: () { action(); }, icon: Icon(icon), color: color),
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: Text(
@@ -107,11 +111,26 @@ class MyApp extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: color,
-            ),
-          ),
-        )
-      ]
+    ),
+    ),
+    )
+    ]
     );
   }
 }
+
+void callNumber() async{
+  const num = "3939449395";
+  FlutterPhoneDirectCaller.callNumber(num);
+}
+
+void mapLauncher() async{
+    await MapLauncher.showMarker(mapType: MapType.google, coords: Coords(46.494533, 7.718940), title: "Oeschinen Lake Campground");
+}
+
+void shareButton() async{
+  Share.share('Check out this place! Oeschinen Lake Campground');
+}
+
+
 
